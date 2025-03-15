@@ -3,7 +3,6 @@ import time
 import datetime
 import subprocess
 import psutil
-
 import argparse
 
 parser = argparse.ArgumentParser(description='Google Drive Monitor')
@@ -12,7 +11,17 @@ parser.add_argument('--drive-path', '-d', default="S:\\GoogleDrive",
 parser.add_argument('--app-path', '-a',
                    default="C:\\Program Files\\Google\\Drive File Stream\\launch.bat",
                    help='Chemin de l\'exécutable Google Drive')
+parser.add_argument('--start-time', '-s', default='8:00',
+                    help='Time to check drive access (HH:MM format)')
+
+# Parse arguments once
 args = parser.parse_args()
+
+try:
+    hour, minute = map(int, args.start_time.split(':'))
+except ValueError:
+    print("Erreur: Le format de l'heure doit être HH:MM")
+    exit(1)
 
 DRIVE_PATH = args.drive_path
 APP_PATH = args.app_path
@@ -48,7 +57,8 @@ def restart_service():
 
 def main():
     while True:
-        target_time = datetime.datetime.now().replace(hour=21, minute=5, second=0, microsecond=0)
+
+        target_time = datetime.datetime.now().replace(hour=hour, minute=minute, second=0, microsecond=0)
         if datetime.datetime.now() > target_time:
             target_time += datetime.timedelta(days=1)
 
