@@ -4,9 +4,18 @@ import datetime
 import subprocess
 import psutil
 
-DRIVE_PATH = "S:\\GoogleDrive"  # Remplacer par la lettre du lecteur Google Drive
-APP_PATH = "C:\\Program Files\\Google\\Drive File Stream\\launch.bat"  # Chemin de l'exécutable
+import argparse
 
+parser = argparse.ArgumentParser(description='Google Drive Monitor')
+parser.add_argument('--drive-path', '-d', default="S:\\GoogleDrive",
+                   help='Chemin du lecteur Google Drive')
+parser.add_argument('--app-path', '-a',
+                   default="C:\\Program Files\\Google\\Drive File Stream\\launch.bat",
+                   help='Chemin de l\'exécutable Google Drive')
+args = parser.parse_args()
+
+DRIVE_PATH = args.drive_path
+APP_PATH = args.app_path
 
 def check_process():
     try:
@@ -25,12 +34,13 @@ def check_drive_access():
             f.write(str(datetime.datetime.now()))
         os.remove(test_file)
         return True
-    except Exception:
+    except Exception as e:
+        print(f"Error accessing drive: {str(e)}")
         return False
 
 
 def restart_service():
-    subprocess.call(['taskkill', '/IM', 'googledrivesync.exe', '/F'],
+    subprocess.call(['taskkill', '/IM', 'googledrivefs.exe', '/F'],
                     creationflags=subprocess.CREATE_NO_WINDOW)
     time.sleep(2)
     subprocess.Popen([APP_PATH], creationflags=subprocess.CREATE_NO_WINDOW)
@@ -38,11 +48,11 @@ def restart_service():
 
 def main():
     while True:
-       # target_time = datetime.datetime.now().replace(hour=8, minute=0, second=0, microsecond=0)
-       # if datetime.datetime.now() > target_time:
-       #    target_time += datetime.timedelta(days=1)
+        target_time = datetime.datetime.now().replace(hour=21, minute=5, second=0, microsecond=0)
+        if datetime.datetime.now() > target_time:
+            target_time += datetime.timedelta(days=1)
 
-       # time.sleep((target_time - datetime.datetime.now()).total_seconds())
+        time.sleep((target_time - datetime.datetime.now()).total_seconds())
 
         if not check_process() or not check_drive_access():
             restart_service()
