@@ -2,6 +2,30 @@
 
 Programme qui surveille et redémarre automatiquement Google Drive en cas de problème.
 
+## Construction de l'exécutable
+
+Pour créer un exécutable à partir du fichier `googleDriveMonitor.py`, vous pouvez utiliser PyInstaller. Suivez les étapes ci-dessous pour générer l'exécutable:
+
+1. Installez PyInstaller si ce n'est pas déjà fait:
+   ```
+   pip install pyinstaller
+   ```
+
+2. Utilisez PyInstaller pour créer l'exécutable:
+   ```
+   pyinstaller --onefile googleDriveMonitor.py
+   ```
+
+3. L'exécutable sera généré dans le répertoire `dist`. Vous pouvez le trouver à l'emplacement suivant:
+   ```
+   dist/googleDriveMonitor.exe
+   ```
+
+4. Déplacez l'exécutable à l'emplacement souhaité et exécutez-le avec les options nécessaires.
+
+Note: Assurez-vous que toutes les dépendances nécessaires sont installées dans votre environnement Python avant de créer l'exécutable.
+
+
 ## Utilisation
 
 ```
@@ -43,3 +67,6 @@ Utiliser plusieurs options:
 ```
 GoogleDriveMonitor.exe -s "7:00" -d "D:\MonDrive" -a "C:\MonChemin\launch.bat"
 ``` 
+
+
+
